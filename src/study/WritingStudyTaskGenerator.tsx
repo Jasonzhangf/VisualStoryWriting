@@ -37,12 +37,12 @@ export class WritingStudyTaskGenerator {
     static generateSteps(participantId: number): StudyStep[] {
         let steps : StudyStep[] = [];
 
-        // First, add the opening message with the link to complete the demographic survey
+        // First, add the opening message
         steps.push({
             condition: "NOT_A_CONDITION",
             task: "NOT_A_TASK",
             type: "MESSAGE",
-            message: `Thank you for participating in this study. Please, first complete this survey questionnaire: <a>Demographic survey</a>. After completing the survey, return to this page to continue the study.`,
+            message: `Thank you for participating in this study. You will now begin the study tasks.`,
         });
 
         steps.push({
@@ -114,7 +114,7 @@ export class WritingStudyTaskGenerator {
                 task: "NOT_A_TASK",
                 condition: condition,
                 saveData: true,
-                message: `Feel free to take a break. Please answer this questionnaire: <a href='${url}' target="_blank">Questionnaire</a>.`        ,
+                message: `Feel free to take a break. You have completed this task.`        ,
           });
 
             });
@@ -143,14 +143,12 @@ export class WritingStudyTaskGenerator {
         hardcodedData: dataTextC
         });
 
-        const url = "";
-        //const url = `https://docs.google.com/forms/d/e/1FAIpQLSdoVCmxaLUTmEoGgecHhwWhuMeXWBLHzsh3CmgqNolwpW64Lg/viewform?usp=pp_url&entry.1411851810=${participantId}`
         steps.push({
             type: "MESSAGE",
             task: "NOT_A_TASK",
             condition: "VISUALWRITING",
             saveData: true,
-            message: `Please answer this questionnaire: <a href='${url}' target="_blank">Questionnaire</a>.`        ,
+            message: `You have completed the study. Thank you for your participation.`        ,
       });
       
 

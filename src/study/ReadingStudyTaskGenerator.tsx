@@ -19,12 +19,12 @@ export class ReadingStudyTaskGenerator {
 
         const link = ``
 
-        // First, add the opening message with the link to complete the demographic survey
+        // First, add the opening message
         steps.push({
             condition: "NOT_A_CONDITION",
             task: "NOT_A_TASK",
             type: "MESSAGE",
-            message: `Thank you for participating in this study. Please, first complete this survey questionnaire: <a target="_blank" href='${link}'>Demographic survey</a>. After completing the survey, return to this page to continue the study.`,
+            message: `Thank you for participating in this study. You will now begin the study tasks.`,
         });
 
           /*const latinSquare = [
@@ -144,22 +144,18 @@ export class ReadingStudyTaskGenerator {
 
 
 
-            const tlx_url = ``
-
             steps.push({
                 type: "MESSAGE",
                 task: "NOT_A_TASK",
                 condition: "NOT_A_CONDITION",
                 saveData: false,
-                message: `Please answer this questionnaire: <a href='${tlx_url}' target="_blank">Questionnaire</a>.`        ,
+                message: `You have completed this section. Please continue to the next task.`        ,
             });
         }
 
 
 
 
-        //const url = "";
-        const url = ``
         steps.push({
             type: "MESSAGE",
             task: "NOT_A_TASK",

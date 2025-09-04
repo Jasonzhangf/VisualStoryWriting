@@ -75,8 +75,10 @@ export class JSONPrompt<T> extends BasePrompt<PromptResult<T>> {
     return new Promise<PromptResult<T>>((resolve, reject) => {
       (async () => {
         useStudyStore.getState().logEvent("PROMPT_TO_EXECUTE", { prompt: this.prompt.prompt });
+        // Get default model from environment variables
+        const defaultModel = import.meta.env.VITE_DEFAULT_MODEL || "gpt-4o-2024-08-06";
         const stream = await openai.chat.completions.create({
-          model: this.prompt.model || "gpt-4o-2024-08-06",
+          model: this.prompt.model || defaultModel,
           messages: [{ role: 'user', content: this.prompt.prompt }],
           stream: true,
           temperature: 0,

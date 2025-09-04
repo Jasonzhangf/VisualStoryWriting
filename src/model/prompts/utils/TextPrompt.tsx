@@ -14,8 +14,10 @@ export class TextPrompt extends BasePrompt<PromptResult<string>> {
         return new Promise<PromptResult<string>>((resolve, reject) => {
             
             (async () => {
+                // Get default model from environment variables
+                const defaultModel = import.meta.env.VITE_DEFAULT_MODEL || "gpt-4o-2024-08-06";
                 const stream = await openai.chat.completions.create({
-                  model: this.prompt.model || "gpt-4o-2024-08-06",
+                  model: this.prompt.model || defaultModel,
                   messages: [{ role: 'user', content: this.prompt.prompt }],
                   temperature: 0,
                   stream: true,

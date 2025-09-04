@@ -47,50 +47,61 @@ export default function Launcher() {
         useModelStore.getState().setActionEdges([]);
     }
 
-    window.location.hash = '/free-form' + `?k=${btoa(accessKey)}`;
+    // For LMStudio, we don't need to pass the API key in the URL
+    const isLMStudio = import.meta.env.VITE_API_BASE_URL && import.meta.env.VITE_API_BASE_URL.includes("localhost");
+    if (isLMStudio) {
+        window.location.hash = '/free-form';
+    } else {
+        window.location.hash = '/free-form' + `?k=${btoa(accessKey)}`;
+    }
 }
+
+  const isLMStudio = import.meta.env.VITE_API_BASE_URL && import.meta.env.VITE_API_BASE_URL.includes("localhost");
 
   return <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', height: '100vh'}}>
     <Card>
         <CardHeader><span style={{fontSize: 25}}><MdHistoryEdu /></span><span style={{marginLeft: 5}}>Visual Story-Writing</span></CardHeader>
         <Divider />
-        <CardBody>
-            <p>To run the examples below, please paste an OpenAI API key. You can obtain one from <a href="https://platform.openai.com/account/api-keys">here</a>.</p>
-            <Input variant="faded" label="API Key" placeholder="sk-..." style={{marginTop: 10}}
-            onChange={(e) => {
-                setAccessKey(e.target.value);
-                setOpenAIKey(e.target.value);
-            }}
-            ></Input>
-        </CardBody>
+        {!isLMStudio && (
+          <CardBody>
+              <p>To run the examples below, please paste an OpenAI API key. You can obtain one from <a href="https://platform.openai.com/account/api-keys">here</a>.</p>
+              <Input variant="faded" label="API Key" placeholder="sk-..." style={{marginTop: 10}}
+              onChange={(e) => {
+                  setAccessKey(e.target.value);
+                  setOpenAIKey(e.target.value);
+              }}
+              ></Input>
+          </CardBody>
+        )}
         <Divider />
         <CardBody>
             <span style={{fontWeight: 800}}>Shortcuts to try out Visual Story-Writing on examples</span>
             <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'center', alignItems: 'center', gap: 40, marginTop: 10}}>
                 <Button 
-                isDisabled={accessKey.length === 0}
+                isDisabled={!isLMStudio && accessKey.length === 0}
                     onClick={() => {
                         startExample(textAlice, dataTextAlice)
                     }}
                 >Alice in Wonderland</Button>
                 
                 <Button
-                isDisabled={accessKey.length === 0}
+                isDisabled={!isLMStudio && accessKey.length === 0}
                 onClick={() => {
                     startExample(textB, dataTextB)
                 }}  
                 >Sled Adventure</Button>
 
-<Button
-                isDisabled={accessKey.length === 0}
+                <Button
+                isDisabled={!isLMStudio && accessKey.length === 0}
                 onClick={() => {
                     startExample(textD, dataTextD)
                 }}  
                 >Waves Apart</Button>
 
                 <Button
-                isDisabled={accessKey.length === 0}
+                isDisabled={!isLMStudio && accessKey.length === 0}
                     onClick={() => {
+                        // For Blank Page, we need to initialize with empty data but proper structure
                         startExample("", null);
                     }}
                 >Blank Page</Button>
@@ -100,7 +111,7 @@ export default function Launcher() {
         <CardBody>
             <span style={{fontWeight: 800}}>Run study 1</span>
             <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'left', alignItems: 'center', gap: 40, marginTop: 10}}>
-                <Select isDisabled={accessKey.length === 0}
+                <Select isDisabled={!isLMStudio && accessKey.length === 0}
                 variant="faded" label="Participant ID" className="max-w-xs" 
                 onChange={(e) => setPid(parseInt(e.target.value))}>
                     {
@@ -108,11 +119,16 @@ export default function Launcher() {
                     }
                 </Select>
                 <Button
-                    isDisabled={accessKey.length === 0 || pid === -1}
+                    isDisabled={(!isLMStudio && accessKey.length === 0) || pid === -1}
                     onClick={() => {
                         resetModel();
                         resetStudyModel();
-                        window.location.hash = '/study' + '?pid=' + (pid+1) + `&k=${btoa(accessKey)}` + '&studyType=READING';
+                        // For LMStudio, we don't need to pass the API key in the URL
+                        if (isLMStudio) {
+                            window.location.hash = '/study' + '?pid=' + (pid+1) + '&studyType=READING';
+                        } else {
+                            window.location.hash = '/study' + '?pid=' + (pid+1) + `&k=${btoa(accessKey)}` + '&studyType=READING';
+                        }
                     }}
                 >Start</Button>
             </div>
@@ -121,7 +137,7 @@ export default function Launcher() {
         <CardBody>
             <span style={{fontWeight: 800}}>Run study 2</span>
             <div style={{display: 'flex', flexDirection: 'row', justifyContent: 'left', alignItems: 'center', gap: 40, marginTop: 10}}>
-                <Select isDisabled={accessKey.length === 0}
+                <Select isDisabled={!isLMStudio && accessKey.length === 0}
                 variant="faded" label="Participant ID" className="max-w-xs" 
                 onChange={(e) => setPid(parseInt(e.target.value))}>
                     {
@@ -129,11 +145,16 @@ export default function Launcher() {
                     }
                 </Select>
                 <Button
-                    isDisabled={accessKey.length === 0 || pid === -1}
+                    isDisabled={(!isLMStudio && accessKey.length === 0) || pid === -1}
                     onClick={() => {
                         resetModel();
                         resetStudyModel();
-                        window.location.hash = '/study' + '?pid=' + (pid+1) + `&k=${btoa(accessKey)}` + '&studyType=WRITING';
+                        // For LMStudio, we don't need to pass the API key in the URL
+                        if (isLMStudio) {
+                            window.location.hash = '/study' + '?pid=' + (pid+1) + '&studyType=WRITING';
+                        } else {
+                            window.location.hash = '/study' + '?pid=' + (pid+1) + `&k=${btoa(accessKey)}` + '&studyType=WRITING';
+                        }
                     }}
                 >Start</Button>
             </div>

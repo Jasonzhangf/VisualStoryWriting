@@ -19,19 +19,26 @@ const search = hashSplitted[hashSplitted.length-1]
 const params = new URLSearchParams(search);
 const key = params.get('k');
 
-let openaiKey = ""
+// Get API configuration from environment variables
+const apiBaseUrl = import.meta.env.VITE_API_BASE_URL || "https://api.openai.com/v1";
+let openaiKey = import.meta.env.VITE_OPENAI_API_KEY || "";
+
 if (!key) {
     if ("VITE_OPENAI_API_KEY" in import.meta.env) {
         openaiKey = import.meta.env.VITE_OPENAI_API_KEY;
-    } /*else {
-        throw new Error("No key provided in the URL parameters");
-    }*/
+    }
 } else {
     openaiKey = atob(key)
 }
 
+// For LMStudio, the key can be anything, but it's required by the OpenAI client
+if (!openaiKey && apiBaseUrl.includes("localhost")) {
+    openaiKey = "lm-studio";
+}
+
 export const openai = new OpenAI({
     apiKey: openaiKey,
+    baseURL: apiBaseUrl,
     dangerouslyAllowBrowser: true
 });
 

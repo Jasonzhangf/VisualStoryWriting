@@ -81,19 +81,11 @@ export default function StudyInterface() {
       <CardBody>
         <Accordion isCompact defaultExpandedKeys={["1"]}>
           <AccordionItem key="1" aria-label="Accordion 1" title="Instructions" style={{whiteSpace: 'pre-wrap'}}>
-            {!showSlider && currentStep.instructions![instructionIndex]}
+            {currentStep.instructions![instructionIndex]}
           </AccordionItem>
         </Accordion>
-        {showSlider && <span style={{ width: '100%', marginTop: 20, marginBottom: 10, textAlign: 'center' }}>How succesful were you in accomplish these tasks</span>}
         <div style={{ display: 'flex', flexDirection: 'row', gap: 10, alignItems: 'center' }}>
-          {showSlider && <Slider value={sliderValue} onChange={(v) => setSliderValue(v as number)}  showSteps={true} minValue={1} maxValue={5} step={1} label={"Unsucessful"} getValue={() => "Successful"} 
-          classNames={{
-            thumb: sliderValue < 0 ? "hidden" : "",
-            track: sliderValue < 0 ? "border-s-transparent" : "",
-            filler: sliderValue < 0 ? "hidden" : "",
-          }}
-          />}
-          { !showSlider && <Popover isOpen={resetPopoverEnabled} onClose={() => setResetPopoverEnabled(false)}>
+          <Popover isOpen={resetPopoverEnabled} onClose={() => setResetPopoverEnabled(false)}>
             <PopoverTrigger>
               <Button variant={"light"} onPressStart={(e) => {
                 setResetButtonTimestamp(new Date().getTime());
@@ -113,23 +105,16 @@ export default function StudyInterface() {
             <PopoverContent>
               <p>Press for at least 1 second</p>
             </PopoverContent>
-          </Popover>}
-          <Button isDisabled={showSlider && sliderValue < 0} color={isOutOfTime ? "danger" : undefined} style={{ flexGrow: 5 }} onClick={(e) => {
+          </Popover>
+          <Button color={isOutOfTime ? "danger" : undefined} style={{ flexGrow: 5 }} onClick={(e) => {
             useStudyStore.getState().logEvent("NEXT_PRESSED");
             if (instructionIndex + 1 < currentStep.instructions!.length) {
               useStudyStore.getState().logEvent("SUBTASK_COMPLETED"/*, { finalState: useModelStore.getState(), text: document.getElementById("mainTextField")?.innerText }*/);
               setInstructionIndex(instructionIndex + 1);
             } else {
-              if (currentStep.type === "TASK" && !showSlider && currentStep.task !== "FREE_FORM" && currentStep.task !== "READING_BEFORE_PLANNING" && studyType === "WRITING") {
-                useStudyStore.getState().logEvent("TASK_COMPLETED"/*, { finalState: useModelStore.getState(), text: document.getElementById("mainTextField")?.innerText }*/);
-                setShowSlider(true);
-              } else {
-                useStudyStore.getState().logEvent("NEXT_PRESSED_WITH_RATING", { rating: sliderValue });
-                setShowSlider(false);
-                setInstructionIndex(0);
-                setSliderValue(-1);
-                nextStep();
-              }
+              useStudyStore.getState().logEvent("TASK_COMPLETED"/*, { finalState: useModelStore.getState(), text: document.getElementById("mainTextField")?.innerText }*/);
+              setInstructionIndex(0);
+              nextStep();
             }
           }}>Next</Button>
         </div>
